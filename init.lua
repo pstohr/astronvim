@@ -17,3 +17,7 @@ end
 
 require "lazy_setup"
 require "polish"
+
+require("notify").setup {
+  background_colour = "#000000",
+}
