@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroCore provides a central place to modify mappings, vim options, autocommands, and more!
 -- Configuration documentation can be found with `:h astrocore`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -60,12 +58,57 @@ return {
           desc = "Close buffer from tabline",
         },
 
+        -- Debugger mappings
+        ["<Leader>d"] = { desc = "Debugger" },
+        ["<Leader>db"] = { function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
+        ["<Leader>dB"] = {
+          function()
+            require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
+          end,
+          desc = "Conditional breakpoint",
+        },
+        ["<Leader>dc"] = { function() require("dap").continue() end, desc = "Continue/Start debugging" },
+        ["<Leader>di"] = { function() require("dap").step_into() end, desc = "Step into" },
+        ["<Leader>do"] = { function() require("dap").step_over() end, desc = "Step over" },
+        ["<Leader>dO"] = { function() require("dap").step_out() end, desc = "Step out" },
+        ["<Leader>dq"] = { function() require("dap").terminate() end, desc = "Terminate" },
+        ["<Leader>dr"] = { function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
+        ["<Leader>ds"] = { function() require("dap").continue() end, desc = "Start/Continue" },
+        ["<Leader>du"] = { function() require("dapui").toggle() end, desc = "Toggle debugger UI" },
+        ["<Leader>dh"] = { function() require("dap.ui.widgets").hover() end, desc = "Debugger hover" },
+        ["<Leader>dp"] = { function() require("dap").pause() end, desc = "Pause" },
+        ["<Leader>dR"] = { function() require("dap").run_to_cursor() end, desc = "Run to cursor" },
+
+        -- Python-specific debug mappings
+        ["<Leader>dpt"] = {
+          function()
+            require("dap-python").test_method()
+          end,
+          desc = "Debug Python test method",
+        },
+        ["<Leader>dpc"] = {
+          function()
+            require("dap-python").test_class()
+          end,
+          desc = "Debug Python test class",
+        },
+
         -- tables with just a `desc` key will be registered with which-key if it's installed
         -- this is useful for naming menus
         -- ["<Leader>b"] = { desc = "Buffers" },
 
         -- setting a mapping to false will disable it
         -- ["<C-S>"] = false,
+      },
+      -- Visual mode mappings for debugger
+      v = {
+        ["<Leader>d"] = { desc = "Debugger" },
+        ["<Leader>de"] = {
+          function()
+            require("dapui").eval()
+          end,
+          desc = "Evaluate expression",
+        },
       },
     },
   },

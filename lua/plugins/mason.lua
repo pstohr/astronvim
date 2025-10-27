@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- Customize Mason plugins
 
 ---@type LazySpec
@@ -11,6 +9,7 @@ return {
     opts = {
       ensure_installed = {
         "lua_ls",
+        "pyright", -- Python LSP
         -- add more arguments for adding more language servers
       },
     },
@@ -22,6 +21,9 @@ return {
     opts = {
       ensure_installed = {
         "stylua",
+        "black", -- Python formatter
+        "isort", -- Python import sorter
+        "flake8", -- Python linter
         -- add more arguments for adding more null-ls sources
       },
     },
@@ -31,8 +33,13 @@ return {
     -- overrides `require("mason-nvim-dap").setup(...)`
     opts = {
       ensure_installed = {
-        "python",
+        "python", -- Python debugger (debugpy)
         -- add more arguments for adding more debuggers
+      },
+      handlers = {
+        function(config)
+          require("mason-nvim-dap").default_setup(config)
+        end,
       },
     },
   },
