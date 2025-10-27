@@ -122,20 +122,51 @@ return {
       vim.fn.sign_define("DapStopped", { text = "▶️", texthl = "", linehl = "", numhl = "" })
       vim.fn.sign_define("DapBreakpointRejected", { text = "❌", texthl = "", linehl = "", numhl = "" })
 
+      -- Helper function to detect project root
+      local function get_project_root()
+        local cwd = vim.fn.getcwd()
+        local api_path = cwd .. path_sep .. "api"
+
+        -- Check if ./api exists and contains Python files
+        if vim.fn.isdirectory(api_path) == 1 then
+          local has_python = vim.fn.glob(api_path .. path_sep .. "*.py") ~= ""
+            or vim.fn.isdirectory(api_path .. path_sep .. "venv") == 1
+            or vim.fn.isdirectory(api_path .. path_sep .. ".venv") == 1
+
+          if has_python then
+            return api_path
+          end
+        end
+
+        -- Default to current directory
+        return cwd
+      end
+
       -- Helper function to get Python path
       local function get_python_path()
         local cwd = vim.fn.getcwd()
         local executable_subdir = is_windows and "Scripts" or "bin"
         local python_exec = is_windows and "python.exe" or "python"
 
-        -- Check for virtual environment
-        if vim.fn.executable(cwd .. path_sep .. "venv" .. path_sep .. executable_subdir .. path_sep .. python_exec) == 1 then
-          return cwd .. path_sep .. "venv" .. path_sep .. executable_subdir .. path_sep .. python_exec
-        elseif vim.fn.executable(cwd .. path_sep .. ".venv" .. path_sep .. executable_subdir .. path_sep .. python_exec) == 1 then
-          return cwd .. path_sep .. ".venv" .. path_sep .. executable_subdir .. path_sep .. python_exec
-        else
-          return python_exec
+        -- Check project root first (./api if it exists with Python files)
+        local project_root = get_project_root()
+        if vim.fn.executable(project_root .. path_sep .. "venv" .. path_sep .. executable_subdir .. path_sep .. python_exec) == 1 then
+          return project_root .. path_sep .. "venv" .. path_sep .. executable_subdir .. path_sep .. python_exec
+        elseif vim.fn.executable(project_root .. path_sep .. ".venv" .. path_sep .. executable_subdir .. path_sep .. python_exec) == 1 then
+          return project_root .. path_sep .. ".venv" .. path_sep .. executable_subdir .. path_sep .. python_exec
         end
+
+        -- Fallback to current directory if project root didn't have venv
+        if project_root ~= cwd then
+          if vim.fn.executable(cwd .. path_sep .. "venv" .. path_sep .. executable_subdir .. path_sep .. python_exec) == 1 then
+            return cwd .. path_sep .. "venv" .. path_sep .. executable_subdir .. path_sep .. python_exec
+          elseif vim.fn.executable(cwd .. path_sep .. ".venv" .. path_sep .. executable_subdir .. path_sep .. python_exec) == 1 then
+            return cwd .. path_sep .. ".venv" .. path_sep .. executable_subdir .. path_sep .. python_exec
+          end
+        end
+
+        -- Default to system python
+        return python_exec
       end
 
       -- Python adapter configuration
@@ -163,6 +194,7 @@ return {
           name = "Launch file",
           program = "${file}",
           pythonPath = get_python_path,
+          cwd = get_project_root,
           console = "integratedTerminal",
         },
         {
@@ -175,6 +207,7 @@ return {
             return vim.split(args_string, " +")
           end,
           pythonPath = get_python_path,
+          cwd = get_project_root,
           console = "integratedTerminal",
         },
         {
@@ -184,6 +217,7 @@ return {
           module = "pytest",
           args = { "${file}" },
           pythonPath = get_python_path,
+          cwd = get_project_root,
           console = "integratedTerminal",
         },
         {
@@ -196,6 +230,7 @@ return {
             return { "${file}::" .. test_name }
           end,
           pythonPath = get_python_path,
+          cwd = get_project_root,
           console = "integratedTerminal",
         },
         {
@@ -205,6 +240,7 @@ return {
           module = "pytest",
           args = {},
           pythonPath = get_python_path,
+          cwd = get_project_root,
           console = "integratedTerminal",
         },
         {
@@ -215,6 +251,7 @@ return {
             return vim.fn.input("Module name: ")
           end,
           pythonPath = get_python_path,
+          cwd = get_project_root,
           console = "integratedTerminal",
         },
         {
