@@ -21,9 +21,7 @@ return {
     opts = {
       ensure_installed = {
         "stylua",
-        "black", -- Python formatter
-        "isort", -- Python import sorter
-        "flake8", -- Python linter
+        "ruff", -- Python formatter and linter
         -- add more arguments for adding more null-ls sources
       },
     },

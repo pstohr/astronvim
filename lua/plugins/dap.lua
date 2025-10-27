@@ -210,28 +210,6 @@ return {
         {
           type = "python",
           request = "launch",
-          name = "Django",
-          program = "${workspaceFolder}/manage.py",
-          args = { "runserver", "--noreload" },
-          pythonPath = get_python_path,
-          django = true,
-          console = "integratedTerminal",
-        },
-        {
-          type = "python",
-          request = "launch",
-          name = "Flask",
-          module = "flask",
-          env = {
-            FLASK_APP = "${file}",
-          },
-          args = { "run", "--no-debugger", "--no-reload" },
-          pythonPath = get_python_path,
-          console = "integratedTerminal",
-        },
-        {
-          type = "python",
-          request = "launch",
           name = "Run module",
           module = function()
             return vim.fn.input("Module name: ")
