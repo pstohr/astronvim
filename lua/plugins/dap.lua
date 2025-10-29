@@ -15,7 +15,7 @@ return {
         path_sep ..
         "debugpy" ..
         path_sep ..
-        "venv" ..
+        ".venv" ..
         path_sep ..
         (is_windows and "Scripts" or "bin") ..
         path_sep ..
