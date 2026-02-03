@@ -50,6 +50,9 @@ return {
     },
     -- enable servers that you already have installed without mason
     servers = {
+      "pylsp",
+      "ruff",
+      "ty",
       -- "pyright"
     },
     -- customize language server configuration options passed to `lspconfig`
@@ -69,10 +72,6 @@ return {
         settings = {
           pylsp = {
             plugins = {
-              mypy = {
-                enabled = true,
-                live_mode = true,
-              },
               -- Disable conflicting linters
               autopep8 = { enabled = false },
               pycodestyle = { enabled = false },
@@ -95,6 +94,23 @@ return {
           end
           return root
         end,
+      },
+      ty = {
+        cmd = { "ty", "server" },
+        filetypes = { "python" },
+        root_dir = function(fname)
+          local util = require("lspconfig.util")
+          local root = util.root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile")(fname)
+          if not root then
+            root = util.root_pattern("api")(fname)
+          end
+          return root
+        end,
+        settings = {
+          ty = {
+            -- ty language server settings go here
+          },
+        },
       },
     },
     -- customize how language servers are attached
