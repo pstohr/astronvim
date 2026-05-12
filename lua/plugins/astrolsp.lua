@@ -27,16 +27,16 @@ return {
           -- "python",
         },
         formatters = {
-          ["*.py"] = { "ruff" }
+          ["*.py"] = { "ruff" },
+          ["*.lua"] = { "stylua" },
         }
       },
       disabled = { -- disable formatting capabilities for the listed language servers
         "pylsp",
         "mypy",
         "null-ls",
+        "lua_ls", -- disable lua_ls formatting capability if you want to use StyLua
       },
-        -- disable lua_ls formatting capability if you want to use StyLua to format your lua code
-        -- "lua_ls",
       filter = function(client)
         if vim.bo.filetype == "python" then
           return client.name == "ruff"
@@ -86,6 +86,17 @@ return {
       ruff = {
         enabled = true,
         mason = true,
+        on_new_config = function(new_config, new_root_dir)
+          local path_sep = package.config:sub(1, 1)
+          local is_windows = path_sep == "\\"
+          local bin_dir = is_windows and "Scripts" or "bin"
+          
+          if vim.fn.executable(new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ruff") == 1 then
+            new_config.cmd = { new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ruff", "server" }
+          elseif vim.fn.executable(new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ruff") == 1 then
+            new_config.cmd = { new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ruff", "server" }
+          end
+        end,
         root_dir = function(fname)
           local util = require("lspconfig.util")
           local root = util.root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile")(fname)
@@ -97,6 +108,17 @@ return {
       },
       ty = {
         cmd = { "ty", "server" },
+        on_new_config = function(new_config, new_root_dir)
+          local path_sep = package.config:sub(1, 1)
+          local is_windows = path_sep == "\\"
+          local bin_dir = is_windows and "Scripts" or "bin"
+          
+          if vim.fn.executable(new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ty") == 1 then
+            new_config.cmd = { new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ty", "server" }
+          elseif vim.fn.executable(new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ty") == 1 then
+            new_config.cmd = { new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ty", "server" }
+          end
+        end,
         filetypes = { "python" },
         root_dir = function(fname)
           local util = require("lspconfig.util")

@@ -1,4 +1,4 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+-- WARN: THIS FILE IS ACTIVATED
 
 -- Customize Mason plugins
 
