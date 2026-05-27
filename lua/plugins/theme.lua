@@ -2,6 +2,7 @@ return {
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = false, -- Ensure catppuccin is loaded at startup so AstroUI can apply it
     priority = 1000, -- Load this first
     config = function()
       require("catppuccin").setup({
@@ -26,6 +27,13 @@ return {
           gitsigns = true,
           nvimtree = true,
           treesitter = true,
+          native_lsp = { enabled = true },
+          mason = true,
+          notify = true,
+          which_key = true,
+          dap = true,
+          dap_ui = true,
+          neogit = true,
           telescope = {
             enabled = true,
             style = "nvchad", -- Gives telescope a sleek, borderless modern look
