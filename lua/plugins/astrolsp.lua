@@ -85,16 +85,21 @@ return {
       },
       ruff = {
         enabled = true,
-        mason = true,
+        mason = false,
+        cmd = { "uvx", "ruff", "server" },
         on_new_config = function(new_config, new_root_dir)
-          local path_sep = package.config:sub(1, 1)
-          local is_windows = path_sep == "\\"
-          local bin_dir = is_windows and "Scripts" or "bin"
-          
-          if vim.fn.executable(new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ruff") == 1 then
-            new_config.cmd = { new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ruff", "server" }
-          elseif vim.fn.executable(new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ruff") == 1 then
-            new_config.cmd = { new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ruff", "server" }
+          if vim.fn.executable("uvx") == 1 then
+            new_config.cmd = { "uvx", "ruff", "server" }
+          else
+            local path_sep = package.config:sub(1, 1)
+            local is_windows = path_sep == "\\"
+            local bin_dir = is_windows and "Scripts" or "bin"
+            
+            if vim.fn.executable(new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ruff") == 1 then
+              new_config.cmd = { new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ruff", "server" }
+            elseif vim.fn.executable(new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ruff") == 1 then
+              new_config.cmd = { new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ruff", "server" }
+            end
           end
         end,
         root_dir = function(fname)
@@ -107,16 +112,20 @@ return {
         end,
       },
       ty = {
-        cmd = { "ty", "server" },
+        cmd = { "uvx", "ty", "server" },
         on_new_config = function(new_config, new_root_dir)
-          local path_sep = package.config:sub(1, 1)
-          local is_windows = path_sep == "\\"
-          local bin_dir = is_windows and "Scripts" or "bin"
-          
-          if vim.fn.executable(new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ty") == 1 then
-            new_config.cmd = { new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ty", "server" }
-          elseif vim.fn.executable(new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ty") == 1 then
-            new_config.cmd = { new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ty", "server" }
+          if vim.fn.executable("uvx") == 1 then
+            new_config.cmd = { "uvx", "ty", "server" }
+          else
+            local path_sep = package.config:sub(1, 1)
+            local is_windows = path_sep == "\\"
+            local bin_dir = is_windows and "Scripts" or "bin"
+            
+            if vim.fn.executable(new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ty") == 1 then
+              new_config.cmd = { new_root_dir .. path_sep .. "venv" .. path_sep .. bin_dir .. path_sep .. "ty", "server" }
+            elseif vim.fn.executable(new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ty") == 1 then
+              new_config.cmd = { new_root_dir .. path_sep .. ".venv" .. path_sep .. bin_dir .. path_sep .. "ty", "server" }
+            end
           end
         end,
         filetypes = { "python" },
