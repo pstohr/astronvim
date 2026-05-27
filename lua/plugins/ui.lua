@@ -18,6 +18,13 @@ return {
     end,
   },
 
-  -- Disable heirline (default AstroNvim statusline) to prevent conflicts with lualine
-  { "rebelot/heirline.nvim", enabled = false },
+  -- Configure heirline to disable the default statusline (to prevent conflicts with lualine)
+  -- while keeping the tabline (top buffer tabs) enabled.
+  {
+    "rebelot/heirline.nvim",
+    opts = function(_, opts)
+      opts.statusline = nil
+      return opts
+    end,
+  },
 }
