@@ -1,14 +1,6 @@
 return {
   {
     "akinsho/toggleterm.nvim",
-    opts = {
-      on_create = function(term)
-        if vim.fn.has("win32") == 1 then
-          term:send("%USERPROFILE%\\Apps\\CMDER\\vendor\\init.bat")
-          term:clear()
-        end
-      end,
-    },
     keys = {
        {
         "jk",

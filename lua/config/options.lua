@@ -1,6 +1,13 @@
 -- Enable true color support
 vim.opt.termguicolors = true
 
+-- On Windows, when using a bash-like shell, cmd.exe's "/s /c" flags are
+-- nonsense to bash and cause "no file /s" on terminal open.
+if vim.fn.has("win32") == 1 then
+  vim.opt.shell = "C:\\Program Files\\Git\\bin\\bash.exe -i -l" -- Use Git Bash as the default shell
+  vim.opt.shellcmdflag = '-s'
+end
+
 -- Modern UI choices
 vim.opt.number = true         -- Show line numbers
 vim.opt.relativenumber = true -- Relative numbers for easier jumping
