@@ -1,14 +1,22 @@
 return {
   "goolord/alpha-nvim",
   opts = function(_, opts)
-    -- 1. Define Modern ASCII Art
+    -- 1. Define Modern deeply-extruded ASCII Art
     local header_art = {
-      [[      ▜▙▄      ▄▟▛      ]],
-      [[      ▐████▄   ██▌      ]],
-      [[      ▐██▛▜██▄ ██▌      ]],
-      [[      ▐██▌  ▜████▌      ]],
-      [[      ▐██▌   ▜███▌      ]],
-      [[      ▝▀▀      ▀▀▘      ]],
+      [[        /\ \      /\ \     /\ \          ]],
+      [[       \  \ \    /  \ \   /  \ \         ]],
+      [[        \  \ \  / /\ \ \ / /\ \ \        ]],
+      [[         \  \ \/ /  \ \ \/ /  \ \ \      ]],
+      [[          \  \  /    \ \  /    \ \ \     ]],
+      [[           \   /      \  /      \ \ \    ]],
+      [[            \ /        \/        \ \ \   ]],
+      [[            / \                  / / /   ]],
+      [[           /   \                / / /    ]],
+      [[          /  /\ \              / / /     ]],
+      [[         /  /  \ \            / / /      ]],
+      [[        /  / /\ \ \__________/ / /       ]],
+      [[       /  / /  \ \__________/ / /        ]],
+      [[       \/_/     \/_________/ /_/         ]],
     }
 
     -- 2. Dynamic Greeting based on time of day
@@ -34,7 +42,54 @@ return {
     end
 
     opts.section.header.val = header_val
-    opts.section.header.opts.hl = "DashboardHeader"
+
+    -- Custom byte-accurate character-level highlight parser
+    local function parse_wireframe_highlights(line, red_hl, blue_hl, green_hl)
+      local hls = {}
+      local i = 1
+      local len = #line
+      while i <= len do
+        local c = line:sub(i, i)
+        if c == " " then
+          i = i + 1
+        else
+          local start_idx = i - 1
+          local col = i -- 1-indexed column number
+          local hl_group = red_hl
+          if col > 26 then
+            hl_group = green_hl
+          elseif col > 15 then
+            hl_group = blue_hl
+          end
+
+          while i <= len and line:sub(i, i) ~= " " do
+            i = i + 1
+          end
+          local end_idx = i - 1
+          table.insert(hls, { hl_group, start_idx, end_idx })
+        end
+      end
+      return hls
+    end
+
+    -- Calculate gradient highlight groups per line for the ASCII art,
+    -- with character-level 3D side/shadow highlighting.
+    local hl_table = {}
+    for i, line in ipairs(header_art) do
+      local parsed = parse_wireframe_highlights(line, "DashboardHeaderRed", "DashboardHeaderBlue", "DashboardHeaderGreen")
+      table.insert(hl_table, parsed)
+    end
+
+    local greeting = get_greeting()
+    for _, line in ipairs(greeting) do
+      if #line > 0 then
+        table.insert(hl_table, { { "DashboardCenter", 0, #line } })
+      else
+        table.insert(hl_table, {})
+      end
+    end
+
+    opts.section.header.opts.hl = hl_table
 
     -- 3. Custom Premium Buttons
     local get_icon = require("astroui").get_icon
@@ -76,6 +131,13 @@ return {
         text = "#cdd6f4",
       }
       vim.api.nvim_set_hl(0, "DashboardHeader", { fg = colors.mauve, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderRed", { fg = colors.red, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderMauve", { fg = colors.mauve, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderLavender", { fg = colors.lavender, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderBlue", { fg = colors.blue, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderTeal", { fg = colors.teal, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderGreen", { fg = colors.green, bold = true })
+      vim.api.nvim_set_hl(0, "DashboardHeaderShadow", { fg = "#45475a", bold = true })
       vim.api.nvim_set_hl(0, "DashboardCenter", { fg = colors.text })
       vim.api.nvim_set_hl(0, "DashboardShortcut", { fg = colors.red, bold = true })
       vim.api.nvim_set_hl(0, "DashboardFooter", { fg = colors.overlay0, italic = true })
