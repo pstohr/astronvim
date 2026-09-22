@@ -1,24 +1,24 @@
--- This file simply bootstraps the installation of Lazy.nvim and then calls other files for execution
--- This file doesn't necessarily need to be touched, BE CAUTIOUS editing this file and proceed at your own risk.
-local lazypath = vim.env.LAZY or vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
-if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
-  -- stylua: ignore
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath })
-end
-vim.opt.rtp:prepend(lazypath)
+-- Ensure native pack directory in stdpath("data")/site is in packpath
+local site_dir = vim.fn.stdpath "data" .. "/site"
+if not vim.opt.packpath:get()[site_dir] then vim.opt.packpath:prepend(site_dir) end
 
--- validate that lazy is available
-if not pcall(require, "lazy") then
-  -- stylua: ignore
-  vim.api.nvim_echo({ { ("Unable to load lazy from: %s\n"):format(lazypath), "ErrorMsg" }, { "Press any key to exit...", "MoreMsg" } }, true, {})
-  vim.fn.getchar()
-  vim.cmd.quit()
-end
-
+-- Core configuration
 require "config.options"
-require "lazy_setup"
-require "polish"
+require "config.keymaps"
+require "config.autocmds"
 
-require("notify").setup {
-  background_colour = "#000000",
-}
+-- Native package manager (vim.pack)
+require "pack"
+
+-- Plugin setups
+require "plugins.theme"
+require "plugins.ui"
+require "plugins.treesitter"
+require "plugins.telescope"
+require "plugins.neo-tree"
+require "plugins.git"
+require "plugins.toggleterm"
+require "plugins.lsp"
+require "plugins.completion"
+require "plugins.dap"
+require "plugins.dashboard"

@@ -1,34 +1,18 @@
-# AstroNvim Template
+# Neovim Configuration
 
-**NOTE:** This is for AstroNvim v4+
+A clean, modern, ultra-fast **Neovim (v0.12+)** configuration using Neovim's built-in native package manager (**`vim.pack`**).
 
-A template for getting started with [AstroNvim](https://github.com/AstroNvim/AstroNvim)
+## ✨ Features
 
-## 🛠️ Installation
+- **Package Management**: Native Neovim 0.12 package management (`vim.pack`) with declarative dependencies and lockfile (`nvim-pack-lock.json`).
+- **Aesthetics & Theme**: Catppuccin Mocha with transparent background, custom italics, Lualine statusline, Bufferline tabs, and custom 3D ASCII art Alpha dashboard.
+- **Language Server Protocol (LSP)**: Built-in `nvim-lspconfig` and Mason for managing tools. First-class support for `ruff`, `ty`, `pylsp`, and `lua_ls` with format-on-save.
+- **Autocompletion & AI**: `nvim-cmp`, `LuaSnip`, and `copilot.lua` with intelligent `<Tab>` chaining.
+- **Debugging (DAP)**: `nvim-dap` and `nvim-dap-ui` with Python `debugpy` and pytest test-runner integrations.
+- **Git & Terminal**: `Neogit`, `Diffview`, `Gitsigns`, and `ToggleTerm` with direct window navigation.
 
-#### Make a backup of your current nvim and shared folder
+## 📦 Managing Plugins
 
-```shell
-mv ~/.config/nvim ~/.config/nvim.bak
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
-```
-
-#### Create a new user repository from this template
-
-Press the "Use this template" button above to create a new repository to store your user configuration.
-
-You can also just clone this repository directly if you do not want to track your user configuration in GitHub.
-
-#### Clone the repository
-
-```shell
-git clone https://github.com/<your_user>/<your_repository> ~/.config/nvim
-```
-
-#### Start Neovim
-
-```shell
-nvim
-```
+- **Update Plugins**: Run `:lua vim.pack.update()` or press `<Leader>pu`. An interactive diff buffer will open; press `:w` to confirm updates or `:q` to cancel.
+- **Plugin Status**: Run `:lua vim.print(vim.pack.get())` or press `<Leader>ps`.
+- **Clean Inactive Plugins**: Press `<Leader>pc`.
