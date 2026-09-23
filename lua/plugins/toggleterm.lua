@@ -1,6 +1,11 @@
 return {
   {
     "akinsho/toggleterm.nvim",
+    opts = function(_, opts)
+      -- Default to fish when available; fall back to vim.o.shell (e.g. Git Bash on Windows)
+      if vim.fn.executable "fish" == 1 then opts.shell = "fish" end
+      return opts
+    end,
     keys = {
        {
         "jk",
